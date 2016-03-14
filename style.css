@@ -4,12 +4,21 @@
 }
 
 svg {
-  height: 300px;
+  height: 250px;
 }
 
-#pokemonA, #pokemonB {
-  width: 300px;
-  height: 300px;
-  background-color: blue;
+#spriteA, #spriteB {
+  width: 250px;
+  height: 250px;
+  border: 2px solid black;
   margin: 0 auto;
+}
+
+#spriteA {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
 }
