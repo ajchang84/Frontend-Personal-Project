@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+  radarChart();
+
   // Form submits for Pokemon A & B
   $('#pokemonA').on('submit', function(e){
     e.preventDefault();
@@ -36,7 +38,7 @@ $(document).ready(function(){
 
         // Generate Radar Chart
         // radarChart([[2,3,4,5,6,7],[3,2,4,5,6,4]]);
-        radarChart(dataArray);
+        drawPolygon(dataArray, pokemon);
 
         // Query for Pokemon Sprite
         $.ajax({
@@ -50,9 +52,9 @@ $(document).ready(function(){
       }
     });
   }
-  // Radar Chart
 
-  function radarChart(data) {
+  // Radar Chart
+  function radarChart() {
     d3.select('#radarChart svg').remove();
     // buildCoordinates(data);
     // buildVertices(data);
@@ -104,33 +106,39 @@ $(document).ready(function(){
       .attr("transform", "translate(25, 25)")
       .attr("font-family", "sans-serif")
       .attr("font-size", 11);
+  }
 
+
+  function drawPolygon(data, pokemon) {
+    var svgContainer = d3.select('#radarChart svg');
+    svgContainer.selectAll('.vertices' + pokemon).remove();
+    svgContainer.selectAll('.polygon-areas' + pokemon).remove();
     // draw coordinates
     var vertices = svgContainer.selectAll('vertices')
       .data(data).enter()
-      .append("svg:circle").classed('vertices', true)
-      .attr("r", 2)
+      .append("svg:circle").classed('vertices' + pokemon, true)
+      .attr("r", 4)
       .attr("cx", function(d, i) { return 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.sin(i * 2 * Math.PI / 6));})
       .attr("cy", function(d, i) { return 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.cos(i * 2 * Math.PI / 6));})
-      .attr("fill", 'blue');
+      .attr("fill", pokemon === 'A' ? 'blue' : 'red');
 
     // draw polygons  
     var polygons = svgContainer.selectAll('polygons')
       .data(data).enter()
-      .append("svg:polygon").classed("polygon-areas", true)
-      .attr("points", function(d) { // build verticesString for each group
+      .append("svg:polygon").classed("polygon-areas" + pokemon, true)
+      .attr("points", function(d) {
         var verticesString = "";
         data.forEach(function(d,i){verticesString += 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.sin(i * 2 * Math.PI / 6)) + "," + 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.cos(i * 2 * Math.PI / 6)) + " ";
         });
         return verticesString;
       })
       .attr("stroke-width", "2px")
-      .attr("stroke", "blue")
-      .attr("fill", "blue")
+      .attr("stroke", pokemon === 'A' ? 'blue' : 'red')
+      .attr("fill", pokemon === 'A' ? 'blue' : 'red')
       .attr("fill-opacity", 0.1)
       .attr("stroke-opacity", 1)  
       .on('mouseover', function(d) {
-        svgContainer.selectAll(".polygon-areas") // fade all other polygons out
+        svgContainer.selectAll(".polygon-areas" + pokemon) // fade all other polygons out
         .transition(250)
           .attr("fill-opacity", 0.1)
           .attr("stroke-opacity", 0.1);
@@ -140,13 +148,12 @@ $(document).ready(function(){
           .attr("stroke-opacity", 1);
       })
       .on('mouseout', function() {
-        d3.selectAll(".polygon-areas")
+        d3.selectAll(".polygon-areas" + pokemon)
           .transition(250)
           .attr("fill-opacity", 0.1)
           .attr("stroke-opacity", 1);
       });
-
-  }
+    }
 
 
 
