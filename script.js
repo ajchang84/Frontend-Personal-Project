@@ -1,6 +1,12 @@
 $(document).ready(function(){
 
+  // Initialize Radar Chart
   radarChart();
+
+  // Initialize Bar Chart
+  var barA = [0,0,0,0,0,0];
+  var barB = [0,0,0,0,0,0];
+  barChart();
 
   // Form submits for Pokemon A & B
   $('#pokemonA').on('input', function(e){
@@ -34,10 +40,19 @@ $(document).ready(function(){
         for (var i = 0; i < data.types.length; i++) {
           $(stats).append('<p> types: ' + data.types[i].name + '</p>');
         }
+
         dataArray = [data.hp, data.sp_atk, data.sp_def, data.speed, data.defense, data.attack];
 
-        // Generate Radar Chart
+        if (pokemon === 'A')
+        barA = [data.hp, data.attack, data.defense, data.sp_atk, data.sp_def, data.speed];
+        else if (pokemon === 'B')
+        barB = [data.hp, data.attack, data.defense, data.sp_atk, data.sp_def, data.speed];
+
+        // Generate Polygon of Pokemon's Stats
         drawPolygon(dataArray, pokemon);
+
+        // Generate Bars for Pokemon's Stats
+        drawBar(barA, barB);
 
         // Query for Pokemon Sprite
         $.ajax({
@@ -52,11 +67,9 @@ $(document).ready(function(){
     });
   }
 
-  // Radar Chart
+  // Radar Chart Function
   function radarChart() {
     d3.select('#radarChart svg').remove();
-    // buildCoordinates(data);
-    // buildVertices(data);
 
     // draw svg container
     var svgContainer = d3.select('#radarChart')
@@ -109,9 +122,12 @@ $(document).ready(function(){
 
 
   function drawPolygon(data, pokemon) {
+
+    // radar chart container
     var svgContainer = d3.select('#radarChart svg');
     svgContainer.selectAll('.vertices' + pokemon).remove();
     svgContainer.selectAll('.polygon-areas' + pokemon).remove();
+
     // draw coordinates
     var vertices = svgContainer.selectAll('vertices')
       .data(data).enter()
@@ -145,7 +161,6 @@ $(document).ready(function(){
         .transition(250)
           .attr("fill-opacity", 0.7)
           .attr("stroke-opacity", 1)
-          .moveToFront();
       })
       .on('mouseout', function() {
         d3.selectAll(".polygons")
@@ -154,6 +169,62 @@ $(document).ready(function(){
           .attr("stroke-opacity", 1);
       });
     }
+
+  // bar chart on initilization
+  function barChart(){
+    d3.select('#barChart svg').remove();
+
+    var w = 350;
+    var h = 250;
+
+    // draw bar chart container
+    var barChart = d3.select('#barChart')
+      .append('svg')
+      .attr('width', w)
+      .attr('height', h);
+
+    // bar chart for left
+    barChart.selectAll('.A')
+      .data([0,0,0,0,0,0])
+      .enter()
+      .append('rect').classed('A', true)
+      .attr('x', 0)
+      .attr('y', function(d,i) {
+        return i * 40;
+      })
+      .attr('width', function(d,i) {return d; })
+      .attr('height', 35)
+      .attr('fill', 'blue');
+
+    // bar chart for right
+    barChart.selectAll('.B')
+      .data([0,0,0,0,0,0])
+      .enter()
+      .append('rect').classed('B', true)
+      .attr('x', function(d) {return w - d;})
+      .attr('y', function(d,i) {
+        return i * 40;
+      })
+      .attr('width', function(d,i) {return d; })
+      .attr('height', 35)
+      .attr('fill', 'red');
+  }
+
+
+  function drawBar(dataA, dataB){
+    d3.selectAll('.A')
+    .data(dataA)
+    .transition()
+    .attr('width', function(d,i) {return d;});
+
+    d3.selectAll('.B')
+    .data(dataB)
+    .transition()
+    .attr('x', function(d) {return 350 - d;})
+    .attr('width', function(d,i) {return d;});
+
+  }
+
 });
 
 
