@@ -184,7 +184,7 @@ $(document).ready(function(){
       .attr('height', h);
 
     // bar chart for left
-    barChart.selectAll('.A')
+    barChart.selectAll('rect.A')
       .data([0,0,0,0,0,0])
       .enter()
       .append('rect').classed('A', true)
@@ -195,6 +195,12 @@ $(document).ready(function(){
       .attr('width', function(d,i) {return d; })
       .attr('height', 35)
       .attr('fill', 'blue');
+
+    barChart.selectAll('text.A')
+      .data([0,0,0,0,0,0])
+      .enter()
+      .append('text').classed('A', true)
+      .text('');
 
     // bar chart for right
     barChart.selectAll('.B')
@@ -208,6 +214,12 @@ $(document).ready(function(){
       .attr('width', function(d,i) {return d; })
       .attr('height', 35)
       .attr('fill', 'red');
+
+    barChart.selectAll('text.B')
+      .data([0,0,0,0,0,0])
+      .enter()
+      .append('text').classed('B', true)
+      .text('');
   }
 
 
@@ -221,12 +233,34 @@ $(document).ready(function(){
       midPoint.push(350 * (dataA[i]/total[i]));
     }
 
-    d3.selectAll('.A')
+    d3.selectAll('text.A')
+    .data(dataA)
+    .transition()
+    .text(function(d) {return d;})
+    .attr('x', function(d,i) {return midPoint[i] - 30;})
+    .attr('y', function(d,i) {return i * 40 + 22;})
+    .attr("font-family", "sans-serif")
+    .attr("font-size", "16px")
+    .attr("fill", "white")
+    .attr("text-anchor", "middle");
+
+    d3.selectAll('text.B')
+    .data(dataB)
+    .transition()
+    .text(function(d) {return d;})
+    .attr('x', function(d,i) {return 350 - (350 - midPoint[i]) + 30;})
+    .attr('y', function(d,i) {return i * 40 + 22;})
+    .attr("font-family", "sans-serif")
+    .attr("font-size", "16px")
+    .attr("fill", "white")
+    .attr("text-anchor", "middle");
+
+    d3.selectAll('rect.A')
     .data(midPoint)
     .transition()
     .attr('width', function(d,i) {return d;});
 
-    d3.selectAll('.B')
+    d3.selectAll('rect.B')
     .data(midPoint)
     .transition()
     .attr('x', function(d) {return 350 - (350 - d);})
