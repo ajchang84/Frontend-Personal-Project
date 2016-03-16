@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.1.min.js"></script>
+  <script type='text/javascript' src='d3.min.js'></script>
   <script type="text/javascript" src="script.js"></script>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -17,7 +18,7 @@
   <title>Pokemon Comparison</title>
 </head>
 <body>
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse">
   <ul class="nav navbar-nav">
     <li class="active"><a href="#">Pokemon Comparison <span class="sr-only">(current)</span></a></li>
     <li><a href="#">Pokemon Category</a></li>
@@ -33,7 +34,7 @@
       </form>
     </div>
     <div class="col-md-4">
-      <h1>vs</h1>
+      <h1>VS</h1>
     </div>
     <div class="col-md-4">
       <p>Pokemon 2</p>
@@ -49,9 +50,7 @@
         <img src="">
       </div>
     </div>
-    <div class="col-md-4">
-      <svg>
-      </svg>
+    <div class="col-md-4" id="radarChart">
     </div>
     <div class="col-md-4">
       <div id="spriteB">

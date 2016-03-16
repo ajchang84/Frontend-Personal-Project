@@ -3,14 +3,10 @@
   align-content: center;
 }
 
-svg {
-  height: 250px;
-}
-
 #spriteA, #spriteB {
   width: 250px;
   height: 250px;
-  border: 2px solid black;
+  border: 2px solid #801515;
   margin: 0 auto;
 }
 
