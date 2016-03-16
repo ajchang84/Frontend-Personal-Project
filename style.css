@@ -6,7 +6,7 @@
 #spriteA, #spriteB {
   width: 250px;
   height: 250px;
-  border: 2px solid #801515;
+  border: 2px solid;
   margin: 0 auto;
 }
 
@@ -17,4 +17,14 @@
   transform: scaleX(-1);
   filter: FlipH;
   -ms-filter: "FlipH";
+  background-color: #AED4FE;
+  border-color: blue;
+}
+
+#spriteB {
+  background-color: #FFA8B4;
+  border-color: red;
+}
+body {
+  background-color: #FFF4AB;
 }

@@ -3,14 +3,14 @@ $(document).ready(function(){
   radarChart();
 
   // Form submits for Pokemon A & B
-  $('#pokemonA').on('submit', function(e){
+  $('#pokemonA').on('input', function(e){
     e.preventDefault();
-    queryPAI('A', $('#pokemonA input').val());
+    queryPAI('A', $('#pokemonA').val().replace(/[^0-9]/g, ''));
   });
 
-  $('#pokemonB').on('submit', function(e){
+  $('#pokemonB').on('input', function(e){
     e.preventDefault();
-    queryPAI('B', $('#pokemonB input').val());
+    queryPAI('B', $('#pokemonB').val().replace(/[^0-9]/g, ''));
   });
 
   // Query the Pokemon API
@@ -37,7 +37,6 @@ $(document).ready(function(){
         dataArray = [data.hp, data.sp_atk, data.sp_def, data.speed, data.defense, data.attack];
 
         // Generate Radar Chart
-        // radarChart([[2,3,4,5,6,7],[3,2,4,5,6,4]]);
         drawPolygon(dataArray, pokemon);
 
         // Query for Pokemon Sprite
@@ -117,7 +116,7 @@ $(document).ready(function(){
     var vertices = svgContainer.selectAll('vertices')
       .data(data).enter()
       .append("svg:circle").classed('vertices' + pokemon, true)
-      .attr("r", 4)
+      .attr("r", 3)
       .attr("cx", function(d, i) { return 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.sin(i * 2 * Math.PI / 6));})
       .attr("cy", function(d, i) { return 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.cos(i * 2 * Math.PI / 6));})
       .attr("fill", pokemon === 'A' ? 'blue' : 'red');
@@ -125,7 +124,7 @@ $(document).ready(function(){
     // draw polygons  
     var polygons = svgContainer.selectAll('polygons')
       .data(data).enter()
-      .append("svg:polygon").classed("polygon-areas" + pokemon, true)
+      .append("svg:polygon").classed("polygon-areas" + pokemon, true).classed('polygons', true)
       .attr("points", function(d) {
         var verticesString = "";
         data.forEach(function(d,i){verticesString += 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.sin(i * 2 * Math.PI / 6)) + "," + 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.cos(i * 2 * Math.PI / 6)) + " ";
@@ -138,123 +137,23 @@ $(document).ready(function(){
       .attr("fill-opacity", 0.1)
       .attr("stroke-opacity", 1)  
       .on('mouseover', function(d) {
-        svgContainer.selectAll(".polygon-areas" + pokemon) // fade all other polygons out
+        svgContainer.selectAll(".polygons") // fade all other polygons out
         .transition(250)
           .attr("fill-opacity", 0.1)
           .attr("stroke-opacity", 0.1);
         d3.select(this) // focus on active polygon
         .transition(250)
           .attr("fill-opacity", 0.7)
-          .attr("stroke-opacity", 1);
+          .attr("stroke-opacity", 1)
+          .moveToFront();
       })
       .on('mouseout', function() {
-        d3.selectAll(".polygon-areas" + pokemon)
+        d3.selectAll(".polygons")
           .transition(250)
           .attr("fill-opacity", 0.1)
           .attr("stroke-opacity", 1);
       });
     }
-
-
-
-
-
-
-  
-
-  // var RadarChart = {
-  //   draw: function(id, data, options) {
-
-  //     var w = 300;
-  //     var h = 300;
-  //     var config = {
-  //       w: w,
-  //       h: h,
-  //       levels: 5,
-  //       levelScale: 0.85,
-  //       labelScale: 1.0,
-  //       maxValue: 0,
-  //       radians: 2 * Math.PI,
-  //       polygonAreaOpacity: 0.3,
-  //       polygonStrokeOpacity: 1,
-  //       polygonPointSize: 4,
-  //       legendBoxSize: 10,
-  //       translateX: w / 4,
-  //       translateY: h / 4,
-  //       paddingX: w,
-  //       paddingY: h,
-  //       colors: d3.scale.category10(),
-  //       showLevels: true,
-  //       showLevelsLabels: true,
-  //       showAxesLabels: true,
-  //       showAxes: true,
-  //       showLegend: true,
-  //       showVertices: true,
-  //       showPolygons: true
-  //     };
-
-  //     var vis = {
-  //       svg: null,
-  //       tooltip: null,
-  //       levels: null,
-  //       axis: null,
-  //       vertices: null,
-  //       legend: null,
-  //       allAxis: null,
-  //       total: null,
-  //       radius: null
-  //     };
-
-  //     render(data);
-
-  //     function render(data) {
-  //       d3.select(id).selectAll("svg").remove();
-  //       buildVis(data);
-  //     }
-
-  //     // update configuration parameters
-  //     function updateConfig() {
-  //       // adjust config parameters
-  //       config.maxValue = Math.max(config.maxValue, d3.max(data, function(d) {
-  //         return d3.max(d.axes, function(o) { return o.value; });
-  //       }));
-  //       config.w *= config.levelScale;
-  //       config.h *= config.levelScale;
-  //       config.paddingX = config.w * config.levelScale;
-  //       config.paddingY = config.h * config.levelScale;
-  //     }
-
-  //     function buildVis(data) {
-  //       buildVisComponents();
-  //       buildCoordinates();
-  //     }
-
-  //     function buildVisComponents() {
-  //       vis.svg = d3.select(id)
-  //         .append('svg')
-  //         .attr('width', 250)
-  //         .attr('height', 250);
-  //       vis.levels = vis.svg.selectAll('.levels')
-  //         .append('svg:g').classed('levels', true);
-  //       vis.axes = vis.svg.selectAll('.axes')
-  //         .append('svg:g').classed('axes', true);
-  //       vis.vertices = vis.svg.selectAll('.vertices')
-  //         .append('svg:g').classed('vertices', true);
-  //     }
-
-
-
-
-  //   }
-  // };
-
-
-
-
-
-
-
-  
 });
 
 
