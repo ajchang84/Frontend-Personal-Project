@@ -212,16 +212,25 @@ $(document).ready(function(){
 
 
   function drawBar(dataA, dataB){
+
+    var midPoint = [];
+    var total = [];
+
+    for (var i = 0; i < 6; i++) {
+      total.push(dataA[i] + dataB[i]);
+      midPoint.push(350 * (dataA[i]/total[i]));
+    }
+
     d3.selectAll('.A')
-    .data(dataA)
+    .data(midPoint)
     .transition()
     .attr('width', function(d,i) {return d;});
 
     d3.selectAll('.B')
-    .data(dataB)
+    .data(midPoint)
     .transition()
-    .attr('x', function(d) {return 350 - d;})
-    .attr('width', function(d,i) {return d;});
+    .attr('x', function(d) {return 350 - (350 - d);})
+    .attr('width', function(d,i) {return 350 - d;});
 
   }
 
