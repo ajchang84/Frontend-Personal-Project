@@ -32,9 +32,11 @@ $(document).ready(function(){
         for (var i = 0; i < data.types.length; i++) {
           $(stats).append('<p> types: ' + data.types[i].name + '</p>');
         }
+        dataArray = [data.hp, data.sp_atk, data.sp_def, data.speed, data.defense, data.attack];
+
         // Generate Radar Chart
         // radarChart([[2,3,4,5,6,7],[3,2,4,5,6,4]]);
-        radarChart([20,40,20,20,200,100]);
+        radarChart(dataArray);
 
         // Query for Pokemon Sprite
         $.ajax({
@@ -126,7 +128,7 @@ $(document).ready(function(){
       .attr("stroke", "blue")
       .attr("fill", "blue")
       .attr("fill-opacity", 0.1)
-      .attr("stroke-opacity", 1)
+      .attr("stroke-opacity", 1)  
       .on('mouseover', function(d) {
         svgContainer.selectAll(".polygon-areas") // fade all other polygons out
         .transition(250)
