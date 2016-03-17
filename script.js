@@ -205,7 +205,7 @@ $(document).ready(function(){
       .append('rect').classed('A', true)
       .attr('x', 0)
       .attr('y', function(d,i) {
-        return i * 40 + 20;
+        return i * 35 + 20;
       })
       .attr('width', function(d,i) {return d; })
       .attr('height', 20)
@@ -224,7 +224,7 @@ $(document).ready(function(){
       .append('rect').classed('B', true)
       .attr('x', function(d) {return w - d;})
       .attr('y', function(d,i) {
-        return i * 40 + 20;
+        return i * 35 + 20;
       })
       .attr('width', function(d,i) {return d; })
       .attr('height', 20)
@@ -256,7 +256,7 @@ $(document).ready(function(){
       .ease('elastic')
       .text(function(d) {return d;})
       .attr('x', function(d,i) {return midPoint[i] - 20;})
-      .attr('y', function(d,i) {return i * 40 + 35;})
+      .attr('y', function(d,i) {return i * 35 + 35;})
       .attr("font-family", "sans-serif")
       .attr("font-size", "13px")
       .attr("fill", "white")
@@ -269,7 +269,7 @@ $(document).ready(function(){
       .ease('elastic')
       .text(function(d) {return d;})
       .attr('x', function(d,i) {return 350 - (350 - midPoint[i]) + 20;})
-      .attr('y', function(d,i) {return i * 40 + 35;})
+      .attr('y', function(d,i) {return i * 35 + 35;})
       .attr("font-family", "sans-serif")
       .attr("font-size", "13px")
       .attr("fill", "white")
@@ -296,7 +296,7 @@ $(document).ready(function(){
       .append('text').classed('cat', true)
       .text(function(d) {return d;})
       .attr('x', 4)
-      .attr('y', function(d,i) {return i * 40 + 16;})
+      .attr('y', function(d,i) {return i * 35 + 17;})
       .attr("font-family", "sans-serif")
       .attr("font-size", "10px");
   }
