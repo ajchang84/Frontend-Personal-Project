@@ -19,54 +19,57 @@
   <title>Pokemon Comparison</title>
 </head>
 <body>
-<nav class="navbar navbar-inverse">
+<br>
+<!-- <nav class="navbar navbar-inverse">
   <ul class="nav navbar-nav">
     <li class="active"><a href="#">Pokemon Comparison <span class="sr-only">(current)</span></a></li>
     <li><a href="#">Pokemon Category</a></li>
   </ul>
-</nav>
-<div class="container">
+</nav> -->
+<div class="container-fluid">
   <div class="row">
-    <div class="col-md-4">
-      <p>Pokemon 1</p>
-      <input id='pokemonA' list="pokemonList" name="myBrowser" />
+    <div class="col-xs-4 input">
+      <input id='pokemonA' list="pokemonList" name="myBrowser" placeholder="Pokemon 1" />
       <datalist id="pokemonList">
       </datalist>
     </div>
-    <div class="col-md-4">
-      <h1>VS</h1>
+    <div class="col-xs-4">
+      <h2>Pokemon Stats Visualizer</h2>
+      <hr>
     </div>
-    <div class="col-md-4">
-      <p>Pokemon 2</p>
-      <input id='pokemonB' list="pokemonList" name="myBrowser" />
-
+    <div class="col-xs-4 input">
+      <input id='pokemonB' list="pokemonList" name="myBrowser" placeholder="Pokemon 2"/>
     </div>
   </div>
+  <br>
   <div class="row display">
-    <div class="col-md-4">
+    <div class="col-xs-4">
       <div id="spriteA">
+        <p class="name"></p>
         <img src="">
       </div>
     </div>
-    <div class="col-md-4" id="radarChart">
+    <div class="col-xs-4" id="radarChart">
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-4">
       <div id="spriteB">
+        <p class="name"></p>
         <img src="">
       </div>
     </div>
   </div>
   <div class="row detail">
-    <div class="col-md-4 statsA">
+    <div class="col-xs-4 statsA">
       
     </div>
-    <div class="col-md-4" id="barChart">
+    <div class="col-xs-4" id="barChart">
       
     </div>
-    <div class="col-md-4 statsB">
+    <div class="col-xs-4 statsB">
       
     </div> 
   </div>
 </div>
+<br>
 </body>
 </html>

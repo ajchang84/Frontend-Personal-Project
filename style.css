@@ -1,4 +1,4 @@
-.col-md-4 {
+.col-xs-4 {
   text-align: center;
   align-content: center;
 }
@@ -8,15 +8,19 @@
   height: 250px;
   border: 2px solid;
   margin: 0 auto;
+  border-radius: 25%;
 }
 
-#spriteA {
+#spriteA img{
   -moz-transform: scaleX(-1);
   -o-transform: scaleX(-1);
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
   filter: FlipH;
   -ms-filter: "FlipH";
+}
+
+#spriteA {
   background-color: #AED4FE;
   border-color: blue;
 }
@@ -26,5 +30,25 @@
   border-color: red;
 }
 body {
-  background-color: #FFF4AB;
+  background-image: url('school.png');
+}
+
+.input {
+  margin-top: 63px;
+}
+
+.name {
+  position: relative;
+  top: 15px;
+  font-family: sans-serif;
+  font-size: 18px
+}
+
+img {
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  margin:auto;
 }

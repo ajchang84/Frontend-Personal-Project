@@ -28,41 +28,51 @@ $(document).ready(function(){
       url: "http://pokeapi.co/api/v1/pokemon/" + val,
       dataType: "json",
       success: function(data){
-        $(stats).empty();
-        $(stats).append('<p> name: ' + data.name + '</p>');
-        $(stats).append('<p> hp: ' + data.hp + '</p>');
-        $(stats).append('<p> attack: ' + data.attack + '</p>');
-        $(stats).append('<p> defense: ' + data.defense + '</p>');
-        $(stats).append('<p> special attack: ' + data.sp_atk + '</p>');
-        $(stats).append('<p> special defense: ' + data.sp_def + '</p>');
-        $(stats).append('<p> speed: ' + data.speed + '</p>');
-        $sprite = data.sprites[0].resource_uri;
-        for (var i = 0; i < data.types.length; i++) {
-          $(stats).append('<p> types: ' + data.types[i].name + '</p>');
-        }
-
-        dataArray = [data.hp, data.sp_atk, data.sp_def, data.speed, data.defense, data.attack];
-
-        if (pokemon === 'A')
-        barA = [data.hp, data.attack, data.defense, data.sp_atk, data.sp_def, data.speed];
-        else if (pokemon === 'B')
-        barB = [data.hp, data.attack, data.defense, data.sp_atk, data.sp_def, data.speed];
-
-        // Generate Polygon of Pokemon's Stats
-        drawPolygon(dataArray, pokemon);
-
-        // Generate Bars for Pokemon's Stats
-        drawBar(barA, barB);
-
-        // Query for Pokemon Sprite
-        $.ajax({
-          method: "GET",
-          url: "http://pokeapi.co" + $sprite,
-          dataType: "json",
-          success: function(data){
-            $(sprite).css("background", "url(http://pokeapi.co" + data.image +") 50% 50% no-repeat");
+        if(data.name) {
+          $(stats).empty();
+          $(`${sprite} .name`).text(data.name);
+          // $(stats).append('<p> hp: ' + data.hp + '</p>');
+          // $(stats).append('<p> attack: ' + data.attack + '</p>');
+          // $(stats).append('<p> defense: ' + data.defense + '</p>');
+          // $(stats).append('<p> special attack: ' + data.sp_atk + '</p>');
+          // $(stats).append('<p> special defense: ' + data.sp_def + '</p>');
+          // $(stats).append('<p> speed: ' + data.speed + '</p>');
+          if (data.pkdx_id < 10)
+            $(sprite + " img").attr('src', `http://sprites.pokecheck.org/i/00${data.pkdx_id}.gif`);
+          else if (data.pkdx_id < 100)
+            $(sprite + " img").attr('src', `http://sprites.pokecheck.org/i/0${data.pkdx_id}.gif`);
+          else if (data.pkdx_id < 650)
+            $(sprite + " img").attr('src', `http://sprites.pokecheck.org/i/${data.pkdx_id}.gif`);
+          else {
+          $sprite = data.sprites[0].resource_uri;
+          // Query for Pokemon Sprite
+            $.ajax({
+              method: "GET",
+              url: "http://pokeapi.co" + $sprite,
+              dataType: "json",
+              success: function(data){
+                $(sprite + " img").attr('src', `http://pokeapi.co${data.image}`);
+              }
+            });
           }
-        });
+          for (var i = 0; i < data.types.length; i++) {
+            $(stats).append('<p>Type(s): ' + data.types[i].name + '</p>');
+          }
+
+          dataArray = [data.hp, data.sp_atk, data.sp_def, data.speed, data.defense, data.attack];
+
+          if (pokemon === 'A')
+          barA = [data.hp, data.attack, data.defense, data.sp_atk, data.sp_def, data.speed];
+          else if (pokemon === 'B')
+          barB = [data.hp, data.attack, data.defense, data.sp_atk, data.sp_def, data.speed];
+
+          // Generate Polygon of Pokemon's Stats
+          drawPolygon(dataArray, pokemon);
+
+          // Generate Bars for Pokemon's Stats
+          drawBar(barA, barB);
+
+        }
       }
     });
   }
@@ -160,7 +170,7 @@ $(document).ready(function(){
         d3.select(this) // focus on active polygon
         .transition(250)
           .attr("fill-opacity", 0.7)
-          .attr("stroke-opacity", 1)
+          .attr("stroke-opacity", 1);
       })
       .on('mouseout', function() {
         d3.selectAll(".polygons")
@@ -190,10 +200,10 @@ $(document).ready(function(){
       .append('rect').classed('A', true)
       .attr('x', 0)
       .attr('y', function(d,i) {
-        return i * 40;
+        return i * 40 + 20;
       })
       .attr('width', function(d,i) {return d; })
-      .attr('height', 35)
+      .attr('height', 20)
       .attr('fill', 'blue');
 
     barChart.selectAll('text.A')
@@ -209,10 +219,10 @@ $(document).ready(function(){
       .append('rect').classed('B', true)
       .attr('x', function(d) {return w - d;})
       .attr('y', function(d,i) {
-        return i * 40;
+        return i * 40 + 20;
       })
       .attr('width', function(d,i) {return d; })
-      .attr('height', 35)
+      .attr('height', 20)
       .attr('fill', 'red');
 
     barChart.selectAll('text.B')
@@ -237,10 +247,10 @@ $(document).ready(function(){
     .data(dataA)
     .transition()
     .text(function(d) {return d;})
-    .attr('x', function(d,i) {return midPoint[i] - 30;})
-    .attr('y', function(d,i) {return i * 40 + 22;})
+    .attr('x', function(d,i) {return midPoint[i] - 20;})
+    .attr('y', function(d,i) {return i * 40 + 35;})
     .attr("font-family", "sans-serif")
-    .attr("font-size", "16px")
+    .attr("font-size", "13px")
     .attr("fill", "white")
     .attr("text-anchor", "middle");
 
@@ -248,10 +258,10 @@ $(document).ready(function(){
     .data(dataB)
     .transition()
     .text(function(d) {return d;})
-    .attr('x', function(d,i) {return 350 - (350 - midPoint[i]) + 30;})
-    .attr('y', function(d,i) {return i * 40 + 22;})
+    .attr('x', function(d,i) {return 350 - (350 - midPoint[i]) + 20;})
+    .attr('y', function(d,i) {return i * 40 + 35;})
     .attr("font-family", "sans-serif")
-    .attr("font-size", "16px")
+    .attr("font-size", "13px")
     .attr("fill", "white")
     .attr("text-anchor", "middle");
 
