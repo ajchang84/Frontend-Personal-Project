@@ -68,7 +68,11 @@ $(document).ready(function(){
 
           // attach name and type to pokemon viewer
           $(`${sprite} .name`).text(data.name);
-          $(`${sprite} .type`).text(data.types[0].name);
+          var types = "";
+          data.types.forEach(function(el){
+            types += el.name + " ";
+          });
+          $(`${sprite} .type`).text(types);
 
           // data array to be used for radar chart
           dataArray = [data.hp, data.sp_atk, data.sp_def, data.speed, data.defense, data.attack];

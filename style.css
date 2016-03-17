@@ -36,6 +36,7 @@ body {
 input {
   text-align: center;
   background-color: #fff5e6;
+  border-radius: 10px;
 }
 
 input::-webkit-calendar-picker-indicator {
@@ -53,6 +54,11 @@ input::-webkit-calendar-picker-indicator {
   font-size: 18px
 }
 
+.type {
+  margin-top: 12px;
+  font-size: 12px;
+}
+
 img {
   position:absolute;
   top:0;
@@ -61,3 +67,5 @@ img {
   right:0;
   margin:auto;
 }
+
+
