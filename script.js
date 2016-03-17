@@ -8,6 +8,7 @@ $(document).ready(function(){
   var barB = [0,0,0,0,0,0];
   barChart();
 
+  // Randomly calls pokemon on page load
   queryPAI('A', Math.floor(Math.random()*718));
   queryPAI('B', Math.floor(Math.random()*718));
 
@@ -26,18 +27,25 @@ $(document).ready(function(){
     $(this).val('');
   });
 
-  // Query the Pokemon API
+  // Query the Pokemon API for Stats
   function queryPAI(pokemon, val) {
     var stats = `.stats${pokemon}`;
     var sprite = `#sprite${pokemon}`;
-    $(stats).empty();
+
+    // clear name and type before AJAX call
     $(`${sprite} .name`).text('');
+    $(`${sprite} .type`).text('');
+
+    // placeholder gif while Pokemon gif being called
     $(sprite + " img").attr('src', 'loading.gif');
+
     $.ajax({
       method: "GET",
       url: "http://pokeapi.co/api/v1/pokemon/" + val,
       dataType: "json",
       success: function(data){
+
+        // pulls gifs from http://sprites.pokecheck.org for Pokemon 1-649
         if(data.name) {
           if (data.pkdx_id < 10)
             $(sprite + " img").attr('src', `http://sprites.pokecheck.org/i/00${data.pkdx_id}.gif`);
@@ -46,8 +54,8 @@ $(document).ready(function(){
           else if (data.pkdx_id < 650)
             $(sprite + " img").attr('src', `http://sprites.pokecheck.org/i/${data.pkdx_id}.gif`);
           else {
+          // Pokemon 649 - 718 has no gifs, must make seperate ajax call
           $sprite = data.sprites[0].resource_uri;
-          // Query for Pokemon Sprite
             $.ajax({
               method: "GET",
               url: "http://pokeapi.co" + $sprite,
@@ -57,25 +65,33 @@ $(document).ready(function(){
               }
             });
           }
+
+          // attach name and type to pokemon viewer
           $(`${sprite} .name`).text(data.name);
+          $(`${sprite} .type`).text(data.types[0].name);
 
-          for (var i = 0; i < data.types.length; i++) {
-            $(stats).append('<p class="lead">' + data.types[i].name + '</p>');
-          }
-
-
+          // data array to be used for radar chart
           dataArray = [data.hp, data.sp_atk, data.sp_def, data.speed, data.defense, data.attack];
 
+          // data array to be used for bar chart, seperated by Pokemon
           if (pokemon === 'A')
           barA = [data.hp, data.attack, data.defense, data.sp_atk, data.sp_def, data.speed];
           else if (pokemon === 'B')
           barB = [data.hp, data.attack, data.defense, data.sp_atk, data.sp_def, data.speed];
 
-          // Generate Polygon of Pokemon's Stats
+          // data for scores
+          var total = dataArray.reduce(function(p,c){
+            return p += c;
+          },0);
+
+          // Generate Polygons of Pokemon's Stats
           drawPolygon(dataArray, pokemon);
 
           // Generate Bars for Pokemon's Stats
           drawBar(barA, barB);
+
+          // Generate Score
+          score(total, pokemon);
 
         }
       }
@@ -133,6 +149,23 @@ $(document).ready(function(){
       .attr("transform", "translate(25, 25)")
       .attr("font-family", "sans-serif")
       .attr("font-size", 11);
+
+    // initialize
+    var verticesA = svgContainer.selectAll('.verticesA')
+      .data([0,0,0,0,0,0]).enter()
+      .append("svg:circle").classed('verticesA', true);
+
+    var verticesB = svgContainer.selectAll('.verticesB')
+      .data([0,0,0,0,0,0]).enter()
+      .append("svg:circle").classed('verticesB', true);
+
+    var polygonA = svgContainer.selectAll('.polygonsA')
+      .data([0,0,0,0,0,0]).enter()
+      .append("svg:polygon").classed('polygonsA', true).classed('polygons', true);
+
+    var polygonB = svgContainer.selectAll('.polygonsB')
+      .data([0,0,0,0,0,0]).enter()
+      .append("svg:polygon").classed('polygonsB', true).classed('polygons', true);
   }
 
 
@@ -140,22 +173,22 @@ $(document).ready(function(){
 
     // radar chart container
     var svgContainer = d3.select('#radarChart svg');
-    svgContainer.selectAll('.vertices' + pokemon).remove();
-    svgContainer.selectAll('.polygon-areas' + pokemon).remove();
 
     // draw coordinates
-    var vertices = svgContainer.selectAll('vertices')
-      .data(data).enter()
-      .append("svg:circle").classed('vertices' + pokemon, true)
+    var vertices = svgContainer.selectAll('.vertices' + pokemon)
+      .data(data)
+      .transition()
+      .duration(1000)
       .attr("r", 3)
       .attr("cx", function(d, i) { return 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.sin(i * 2 * Math.PI / 6));})
       .attr("cy", function(d, i) { return 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.cos(i * 2 * Math.PI / 6));})
       .attr("fill", pokemon === 'A' ? 'blue' : 'red');
 
     // draw polygons  
-    var polygons = svgContainer.selectAll('polygons')
-      .data(data).enter()
-      .append("svg:polygon").classed("polygon-areas" + pokemon, true).classed('polygons', true)
+    var polygons = svgContainer.selectAll('.polygons' + pokemon)
+      .data(data)
+      .transition()
+      .duration(1000)
       .attr("points", function(d) {
         var verticesString = "";
         data.forEach(function(d,i){verticesString += 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.sin(i * 2 * Math.PI / 6)) + "," + 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.cos(i * 2 * Math.PI / 6)) + " ";
@@ -166,8 +199,9 @@ $(document).ready(function(){
       .attr("stroke", pokemon === 'A' ? 'blue' : 'red')
       .attr("fill", pokemon === 'A' ? 'blue' : 'red')
       .attr("fill-opacity", 0.1)
-      .attr("stroke-opacity", 1)  
-      .on('mouseover', function(d) {
+      .attr("stroke-opacity", 1);
+
+      d3.selectAll('.polygons').on('mouseover', function(d) {
         svgContainer.selectAll(".polygons") // fade all other polygons out
         .transition(250)
           .attr("fill-opacity", 0.1)
@@ -238,7 +272,7 @@ $(document).ready(function(){
 
   }
 
-
+  // draw bars
   function drawBar(dataA, dataB){
 
     var midPoint = [];
@@ -299,6 +333,17 @@ $(document).ready(function(){
       .attr('y', function(d,i) {return i * 35 + 17;})
       .attr("font-family", "sans-serif")
       .attr("font-size", "10px");
+  }
+
+  // Score function
+  function score(data, pokemon){
+    $({someValue: $('#score'+pokemon).text()}).animate({someValue: data}, {
+      duration: 1000,
+      easing: 'swing',
+      step: function() {
+        $('#score'+pokemon).text(Math.ceil(this.someValue));
+      }
+    });
   }
 
 });

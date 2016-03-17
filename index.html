@@ -15,7 +15,6 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="style.css">
-
   <title>Pokemon Comparison</title>
 </head>
 <body>
@@ -40,6 +39,7 @@
       <div id="spriteA">
         <p class="name"></p>
         <img src="loading.gif">
+        <p class="type"></p>
       </div>
     </div>
     <div class="col-xs-4" id="radarChart">
@@ -48,18 +48,22 @@
       <div id="spriteB">
         <p class="name"></p>
         <img src="loading.gif">
+        <p class="type"></p>
       </div>
     </div>
   </div>
   <div class="row detail">
     <div class="col-xs-4 statsA">
-      
+    <br>  
+      <h4>Battle Score</h4>
+      <h1 id="scoreA">0</h1>
     </div>
-    <div class="col-xs-4" id="barChart">
-      
+    <div class="col-xs-4" id="barChart">    
     </div>
     <div class="col-xs-4 statsB">
-      
+    <br>
+      <h4>Battle Score</h4>
+      <h1 id="scoreB">0</h1>
     </div> 
   </div>
 </div>
