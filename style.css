@@ -33,6 +33,15 @@ body {
   background-image: url('school.png');
 }
 
+input {
+  text-align: center;
+  background-color: #fff5e6;
+}
+
+input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
 .input {
   margin-top: 63px;
 }

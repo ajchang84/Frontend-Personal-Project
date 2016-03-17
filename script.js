@@ -8,6 +8,9 @@ $(document).ready(function(){
   var barB = [0,0,0,0,0,0];
   barChart();
 
+  queryPAI('A', Math.floor(Math.random()*718));
+  queryPAI('B', Math.floor(Math.random()*718));
+
   // Form submits for Pokemon A & B
   $('#pokemonA').on('input', function(e){
     e.preventDefault();
@@ -19,24 +22,23 @@ $(document).ready(function(){
     queryPAI('B', $('#pokemonB').val().replace(/[^0-9]/g, ''));
   });
 
+  $('input').on('click', function(e){
+    $(this).val('');
+  });
+
   // Query the Pokemon API
   function queryPAI(pokemon, val) {
     var stats = `.stats${pokemon}`;
     var sprite = `#sprite${pokemon}`;
+    $(stats).empty();
+    $(`${sprite} .name`).text('');
+    $(sprite + " img").attr('src', 'loading.gif');
     $.ajax({
       method: "GET",
       url: "http://pokeapi.co/api/v1/pokemon/" + val,
       dataType: "json",
       success: function(data){
         if(data.name) {
-          $(stats).empty();
-          $(`${sprite} .name`).text(data.name);
-          // $(stats).append('<p> hp: ' + data.hp + '</p>');
-          // $(stats).append('<p> attack: ' + data.attack + '</p>');
-          // $(stats).append('<p> defense: ' + data.defense + '</p>');
-          // $(stats).append('<p> special attack: ' + data.sp_atk + '</p>');
-          // $(stats).append('<p> special defense: ' + data.sp_def + '</p>');
-          // $(stats).append('<p> speed: ' + data.speed + '</p>');
           if (data.pkdx_id < 10)
             $(sprite + " img").attr('src', `http://sprites.pokecheck.org/i/00${data.pkdx_id}.gif`);
           else if (data.pkdx_id < 100)
@@ -55,9 +57,12 @@ $(document).ready(function(){
               }
             });
           }
+          $(`${sprite} .name`).text(data.name);
+
           for (var i = 0; i < data.types.length; i++) {
-            $(stats).append('<p>Type(s): ' + data.types[i].name + '</p>');
+            $(stats).append('<p class="lead">' + data.types[i].name + '</p>');
           }
+
 
           dataArray = [data.hp, data.sp_atk, data.sp_def, data.speed, data.defense, data.attack];
 
@@ -230,6 +235,7 @@ $(document).ready(function(){
       .enter()
       .append('text').classed('B', true)
       .text('');
+
   }
 
 
@@ -244,38 +250,55 @@ $(document).ready(function(){
     }
 
     d3.selectAll('text.A')
-    .data(dataA)
-    .transition()
-    .text(function(d) {return d;})
-    .attr('x', function(d,i) {return midPoint[i] - 20;})
-    .attr('y', function(d,i) {return i * 40 + 35;})
-    .attr("font-family", "sans-serif")
-    .attr("font-size", "13px")
-    .attr("fill", "white")
-    .attr("text-anchor", "middle");
+      .data(dataA)
+      .transition()
+      .duration(1000)
+      .ease('elastic')
+      .text(function(d) {return d;})
+      .attr('x', function(d,i) {return midPoint[i] - 20;})
+      .attr('y', function(d,i) {return i * 40 + 35;})
+      .attr("font-family", "sans-serif")
+      .attr("font-size", "13px")
+      .attr("fill", "white")
+      .attr("text-anchor", "middle");
 
     d3.selectAll('text.B')
-    .data(dataB)
-    .transition()
-    .text(function(d) {return d;})
-    .attr('x', function(d,i) {return 350 - (350 - midPoint[i]) + 20;})
-    .attr('y', function(d,i) {return i * 40 + 35;})
-    .attr("font-family", "sans-serif")
-    .attr("font-size", "13px")
-    .attr("fill", "white")
-    .attr("text-anchor", "middle");
+      .data(dataB)
+      .transition()
+      .duration(1000)
+      .ease('elastic')
+      .text(function(d) {return d;})
+      .attr('x', function(d,i) {return 350 - (350 - midPoint[i]) + 20;})
+      .attr('y', function(d,i) {return i * 40 + 35;})
+      .attr("font-family", "sans-serif")
+      .attr("font-size", "13px")
+      .attr("fill", "white")
+      .attr("text-anchor", "middle");
 
     d3.selectAll('rect.A')
-    .data(midPoint)
-    .transition()
-    .attr('width', function(d,i) {return d;});
+      .data(midPoint)
+      .transition()
+      .duration(1000)
+      .ease('elastic')
+      .attr('width', function(d,i) {return d;});
 
     d3.selectAll('rect.B')
-    .data(midPoint)
-    .transition()
-    .attr('x', function(d) {return 350 - (350 - d);})
-    .attr('width', function(d,i) {return 350 - d;});
+      .data(midPoint)
+      .transition()
+      .duration(1000)
+      .ease('elastic')
+      .attr('x', function(d) {return 350 - (350 - d);})
+      .attr('width', function(d,i) {return 350 - d;});
 
+    d3.select('#barChart svg').selectAll('text.cat')
+      .data(['Health', 'Attack', 'Defense', 'Special Attack', 'Special Defense', 'Speed'])
+      .enter()
+      .append('text').classed('cat', true)
+      .text(function(d) {return d;})
+      .attr('x', 4)
+      .attr('y', function(d,i) {return i * 40 + 16;})
+      .attr("font-family", "sans-serif")
+      .attr("font-size", "10px");
   }
 
 });
