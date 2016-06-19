@@ -1,3 +1,4 @@
+// populates input list with all pokemon available
 $(document).ready(function(){
 
   var pokemonArray = [

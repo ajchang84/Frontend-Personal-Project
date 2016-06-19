@@ -30,7 +30,7 @@
   border-color: red;
 }
 body {
-  background-image: url('school.png');
+  background-image: url('../images/school.png');
 }
 
 input {

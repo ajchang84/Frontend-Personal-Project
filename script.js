@@ -1,3 +1,10 @@
+/* TODO:
+  1) Seperate D3 code from jQuery code
+  2) Repeated code such as randomizing pokemon 
+     should be in seperate helper function
+  3) Adhere to single responsiblity principle
+*/
+
 $(document).ready(function(){
 
   // Initialize Radar Chart
@@ -37,7 +44,7 @@ $(document).ready(function(){
     $(`${sprite} .type`).text('');
 
     // placeholder gif while Pokemon gif being called
-    $(sprite + " img").attr('src', 'loading.gif');
+    $(sprite + " img").attr('src', 'assets/images/loading.gif');
 
     $.ajax({
       method: "GET",
@@ -157,19 +164,47 @@ $(document).ready(function(){
     // initialize
     var verticesA = svgContainer.selectAll('.verticesA')
       .data([0,0,0,0,0,0]).enter()
-      .append("svg:circle").classed('verticesA', true);
+      .append("svg:circle").classed('verticesA', true)
+      .attr("r", 3)
+      .attr("cx", function(d, i) { return 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.sin(i * 2 * Math.PI / 6));})
+      .attr("cy", function(d, i) { return 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.cos(i * 2 * Math.PI / 6));})
+      .attr('fill', 'blue');
 
     var verticesB = svgContainer.selectAll('.verticesB')
       .data([0,0,0,0,0,0]).enter()
-      .append("svg:circle").classed('verticesB', true);
+      .append("svg:circle").classed('verticesB', true)
+      .attr("r", 3)
+      .attr("cx", function(d, i) { return 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.sin(i * 2 * Math.PI / 6));})
+      .attr("cy", function(d, i) { return 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.cos(i * 2 * Math.PI / 6));})
+      .attr('fill', 'red');
 
     var polygonA = svgContainer.selectAll('.polygonsA')
       .data([0,0,0,0,0,0]).enter()
-      .append("svg:polygon").classed('polygonsA', true).classed('polygons', true);
+      .append("svg:polygon").classed('polygonsA', true)
+      .classed('polygons', true)
+      .attr("points", function(d) {
+        var verticesString = "";
+        [0,0,0,0,0,0].forEach(function(d,i){verticesString += 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.sin(i * 2 * Math.PI / 6)) + "," + 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.cos(i * 2 * Math.PI / 6)) + " ";
+        });
+        return verticesString;
+      })
+      .attr('fill', 'blue')
+      .attr('stroke', 'blue');
 
     var polygonB = svgContainer.selectAll('.polygonsB')
       .data([0,0,0,0,0,0]).enter()
-      .append("svg:polygon").classed('polygonsB', true).classed('polygons', true);
+      .append("svg:polygon").classed('polygonsB', true)
+      .classed('polygons', true)
+      .attr("points", function(d) {
+        var verticesString = "";
+        [0,0,0,0,0,0].forEach(function(d,i){verticesString += 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.sin(i * 2 * Math.PI / 6)) + "," + 125 * (1 - (parseFloat(Math.max(d, 0)) / 250) * Math.cos(i * 2 * Math.PI / 6)) + " ";
+        });
+        return verticesString;
+      })
+      .attr('fill', 'red')
+      .attr('stroke', 'red');
+;
+;
   }
 
 
@@ -349,6 +384,13 @@ $(document).ready(function(){
       }
     });
   }
+
+  // Randomize button
+  $('#randomize').on('click', function(e){
+    queryPAI('A', Math.floor(Math.random()*718));
+    queryPAI('B', Math.floor(Math.random()*718));
+  })
+
 
 });
 
