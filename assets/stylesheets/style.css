@@ -3,7 +3,8 @@
   align-content: center;
 }
 
-#spriteA, #spriteB {
+#spriteA,
+#spriteB {
   width: 250px;
   height: 250px;
   border: 2px solid;
@@ -11,7 +12,7 @@
   border-radius: 25%;
 }
 
-#spriteA img{
+#spriteA img {
   -moz-transform: scaleX(-1);
   -o-transform: scaleX(-1);
   -webkit-transform: scaleX(-1);
@@ -21,16 +22,17 @@
 }
 
 #spriteA {
-  background-color: #AED4FE;
+  background-color: #aed4fe;
   border-color: blue;
 }
 
 #spriteB {
-  background-color: #FFA8B4;
+  background-color: #ffa8b4;
   border-color: red;
 }
 body {
-  background-image: url('../images/school.png');
+  /* background-image: url('../images/school.png'); */
+  background-color: pink;
 }
 
 input {
@@ -51,7 +53,7 @@ input::-webkit-calendar-picker-indicator {
   position: relative;
   top: 15px;
   font-family: sans-serif;
-  font-size: 18px
+  font-size: 18px;
 }
 
 .type {
@@ -60,12 +62,10 @@ input::-webkit-calendar-picker-indicator {
 }
 
 img {
-  position:absolute;
-  top:0;
-  bottom:0;
-  left:0;
-  right:0;
-  margin:auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
-
-
